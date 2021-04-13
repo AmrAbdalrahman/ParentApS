@@ -14,5 +14,10 @@ class UserRepository implements UserRepositoryInterface
         return decodeProvidersJsonFile();
     }
 
+    public function filterByProvider($provider)
+    {
+        return decodeSpecificProviderJsonFile($provider);
+    }
+
 
 }

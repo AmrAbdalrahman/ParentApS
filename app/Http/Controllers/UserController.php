@@ -17,8 +17,23 @@ class UserController extends Controller
 
     public function filter(Request $request)
     {
-        $users = $this->userRepository->allUsers();
-        return $this->apiResponse(UserResource::collection($users));
+        try {
+            $users = [];
+            //filter by provider
+            $provider = $request->query('provider');
+            if ($provider) {
+                $users = decodeSpecificProviderJsonFile($provider);
+            } else {
+                //all users
+                $users = $this->userRepository->allUsers();
+            }
+            if (count($users) > 0)
+                return $this->apiResponse(UserResource::collection($users));
+            else return $this->notFoundResponse('no user found');
+        } catch (\Exception $e) {
+            return $this->notFoundResponse('no user found');
+        }
+
 
     }
 }
