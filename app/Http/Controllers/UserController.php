@@ -18,11 +18,15 @@ class UserController extends Controller
     public function filter(Request $request)
     {
         try {
-            $users = [];
-            //filter by provider
             $provider = $request->query('provider');
+            $statusCode = $request->query('statusCode');
+
+            //filter by provider
             if ($provider) {
                 $users = decodeSpecificProviderJsonFile($provider);
+            } //filter by statusCode
+            elseif ($statusCode) {
+                $users = $this->userRepository->filterByStatusCode($statusCode);
             } else {
                 //all users
                 $users = $this->userRepository->allUsers();
