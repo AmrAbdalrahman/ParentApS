@@ -22,6 +22,7 @@ class UserController extends Controller
             $statusCode = $request->query('statusCode');
             $balanceMin = $request->query('balanceMin');
             $balanceMax = $request->query('balanceMax');
+            $currency = $request->query('currency');
 
             //filter by provider
             if ($provider) {
@@ -32,6 +33,9 @@ class UserController extends Controller
             }//filter by balance
             elseif ($balanceMin && $balanceMax) {
                 $users = $this->userRepository->filterByBalance($balanceMin, $balanceMax);
+            }//filter by currency
+            elseif ($currency) {
+                $users = $this->userRepository->filterByCurrency($currency);
             } else {
                 //all users
                 $users = $this->userRepository->allUsers();

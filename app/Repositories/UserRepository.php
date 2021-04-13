@@ -71,5 +71,20 @@ class UserRepository implements UserRepositoryInterface
         return $matchedResults;
     }
 
+    public function filterByCurrency($currency)
+    {
+        $providersData = decodeProvidersJsonFile();
+
+        $matchedResults = [];
+
+        foreach ($providersData as $user) {
+
+            if ((isset($user->Currency) && $user->Currency == $currency) || (isset($user->currency) && $user->currency == $currency))
+                array_push($matchedResults, $user);
+        }
+
+        return $matchedResults;
+    }
+
 
 }
