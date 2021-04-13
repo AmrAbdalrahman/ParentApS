@@ -86,5 +86,66 @@ class UserRepository implements UserRepositoryInterface
         return $matchedResults;
     }
 
+    public function allFilters($provider, $statusCode, $min, $max, $currency)
+    {
+        $providerUsers = $this->filterByProvider($provider);
+
+        $matchedResults = [];
+
+        foreach ($providerUsers as $user) {
+            if ($statusCode == 'authorised') {
+                if (
+                    (isset($user->statusCode) && $user->statusCode == PARENT_AUTHORISED &&
+                        (isset($user->parentAmount) && ($min <= $user->parentAmount) && ($user->parentAmount <= $max)) &&
+                        (isset($user->Currency) && $user->Currency == $currency) || (isset($user->currency) && $user->currency == $currency)
+                    )
+
+                    || (isset($user->status) && $user->status == CHILD_AUTHORISED &&
+                        (isset($user->parentAmount) && ($min <= $user->parentAmount) && ($user->parentAmount <= $max)) &&
+                        (isset($user->Currency) && $user->Currency == $currency) || (isset($user->currency) && $user->currency == $currency)
+
+                    )
+                )
+                    array_push($matchedResults, $user);
+            }
+
+            //decline case
+            if ($statusCode == 'decline') {
+                if (
+                    (isset($user->statusCode) && $user->statusCode == PARENT_DECLINE &&
+                        (isset($user->parentAmount) && ($min <= $user->parentAmount) && ($user->parentAmount <= $max)) &&
+                        (isset($user->Currency) && $user->Currency == $currency) || (isset($user->currency) && $user->currency == $currency)
+                    )
+
+                    || (isset($user->status) && $user->status == CHILD_DECLINE &&
+                        (isset($user->parentAmount) && ($min <= $user->parentAmount) && ($user->parentAmount <= $max)) &&
+                        (isset($user->Currency) && $user->Currency == $currency) || (isset($user->currency) && $user->currency == $currency)
+
+                    )
+                )
+                    array_push($matchedResults, $user);
+            }
+
+            //refunded case
+            if ($statusCode == 'refunded') {
+                if (
+                    (isset($user->statusCode) && $user->statusCode == PARENT_REFUNDED &&
+                        (isset($user->parentAmount) && ($min <= $user->parentAmount) && ($user->parentAmount <= $max)) &&
+                        (isset($user->Currency) && $user->Currency == $currency) || (isset($user->currency) && $user->currency == $currency)
+                    )
+
+                    || (isset($user->status) && $user->status == CHILD_REFUNDED &&
+                        (isset($user->parentAmount) && ($min <= $user->parentAmount) && ($user->parentAmount <= $max)) &&
+                        (isset($user->Currency) && $user->Currency == $currency) || (isset($user->currency) && $user->currency == $currency)
+
+                    )
+                )
+                    array_push($matchedResults, $user);
+            }
+        }
+
+        return $matchedResults;
+    }
+
 
 }

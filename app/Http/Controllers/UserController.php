@@ -25,8 +25,11 @@ class UserController extends Controller
             $currency = $request->query('currency');
 
             //filter by provider
-            if ($provider) {
-                $users = decodeSpecificProviderJsonFile($provider);
+            if ($provider && $statusCode && $balanceMin && $balanceMax && $currency) {
+                $users = $this->userRepository->allFilters($provider, $statusCode, $balanceMin, $balanceMax, $currency);
+
+            } elseif ($provider) {
+                $users = $this->userRepository->filterByProvider($provider);
             } //filter by statusCode
             elseif ($statusCode) {
                 $users = $this->userRepository->filterByStatusCode($statusCode);
