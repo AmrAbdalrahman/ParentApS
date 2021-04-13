@@ -14,6 +14,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});*/
+
+/********** start users route ***********/
+Route::group(['prefix' => 'v1'], function () {
+    Route::group(['prefix' => 'users'], function () {
+
+        /**
+         * @apiGroup           Users
+         * @apiName            all/filter users
+         * @api                {get} /v1/filter 3-filter
+         * @apiDescription     Get the user details of the logged in user from its Token. (without specifying his ID)
+         *
+         * @apiVersion         1.0.0
+         *
+         * @apiUse             UserSuccessSingleResponse
+         */
+        Route::get('/', ['uses' => 'UserController@filter']);
+
+    });
 });
+/********** end users route ***********/
+
