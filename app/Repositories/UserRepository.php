@@ -59,5 +59,17 @@ class UserRepository implements UserRepositoryInterface
         return $matchedResults;
     }
 
+    public function filterByBalance($min, $max)
+    {
+        $providersData = decodeProvidersJsonFile();
+        $matchedResults = [];
+        foreach ($providersData as $user) {
+            if ((isset($user->parentAmount) && ($min <= $user->parentAmount) && ($user->parentAmount <= $max))
+                || (isset($user->balance) && ($min <= $user->balance) && ($user->balance <= $max)))
+                array_push($matchedResults, $user);
+        }
+        return $matchedResults;
+    }
+
 
 }
